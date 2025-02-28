@@ -33,4 +33,5 @@ export interface AuthContextType {
     register: (credentials: RegisterCredentials) => Promise<void>, // Funktion för registrering
     login: (credentials: LoginCredentials) => Promise<void>, // Funktion för inloggning
     logout: () => void // Funktion för utloggning
+    loading: boolean // Laddningsstatus
 }
