@@ -14,9 +14,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // States
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(false);
 
     // Funktion för att registrera en användare
     const register = async (credentials: RegisterCredentials) => {
+        setLoading(true); // Sätt loading till true
         try {
             // Gör ett anrop till API:et för att registrera användaren
             const res = await fetch("http://localhost:5000/api/auth/register", {
@@ -42,11 +44,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         catch (error) {
             throw error; // Kasta ett fel om något gick fel
+        } finally {
+            setLoading(false); // Sätt loading till false
         }
     }
 
     // Funktion för att logga in
     const login = async (credentials: LoginCredentials) => {
+        setLoading(true); // Sätt loading till true
         try {
             // Gör ett anrop till API:et för att logga in
             const res = await fetch("http://localhost:5000/api/auth/login", {
@@ -71,6 +76,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         catch (error) {
             throw error; // Kasta ett fel om något gick fel
+        } finally {
+            setLoading(false); // Sätt loading till false
         }
     }
 
@@ -83,11 +90,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Validera token
     const checkToken = async () => {
+        setLoading(true); // Sätt loading till true
+
         // Hämta token från localStorage
         const token = localStorage.getItem("token");
 
         // Kontrollera om token finns
         if (!token) {
+            setLoading(false); // Sätt loading till false
             return; // Avsluta funktionen om token saknas
         }
 
@@ -110,6 +120,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         } catch (error) {
             localStorage.removeItem("token"); // Ta bort token om valideringen misslyckades
             setUser(null); // Ta bort användaren från state
+        } finally {
+            setLoading(false); // Sätt loading till false
         }
     };
 
@@ -121,7 +133,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Returnera autentiseringskontexten
     return (
         // Användaren och funktionerna för inloggning och utloggning skickas som värde till kontexten
-        <AuthContext.Provider value={{ user, register, login, logout }}>
+        <AuthContext.Provider value={{ user, register, login, logout, loading }}>
             {children} {/* Rendera barnkomponenter */}
         </AuthContext.Provider>
     );
