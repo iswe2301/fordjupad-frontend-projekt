@@ -15,8 +15,12 @@ const Header = () => {
             {user && <NavLink to="/mina-sidor">Mina sidor</NavLink>}
           </li>
           <li>
-            {/* Om användaren inte är inloggad, visa länk till /mina-sidor, annars visa knapp för att logga ut */}
-            {!user ? <NavLink to="/mina-sidor">Logga in</NavLink> : <button onClick={logout}>Logga ut</button>}
+            {/* Om användaren inte är inloggad, visa länk till /logga-in, annars visa knapp för att logga ut */}
+            {!user ? <NavLink to="/logga-in">Logga in</NavLink> : <button onClick={logout}>Logga ut</button>}
+          </li>
+          <li>
+            {/* Om användaren inte är inloggad, visa länk till /registrera */}
+            {!user && <NavLink to="/registrera">Registrera</NavLink>}
           </li>
         </ul>
       </nav>
