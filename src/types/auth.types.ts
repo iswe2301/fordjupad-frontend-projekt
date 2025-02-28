@@ -7,6 +7,14 @@ export interface User {
     role: "user" | "admin"
 }
 
+// Interface för registreringsuppgifter
+export interface RegisterCredentials {
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string
+}
+
 // Interface för inloggningsuppgifter
 export interface LoginCredentials {
     email: string,
@@ -22,6 +30,7 @@ export interface AuthResponse {
 // Interface för autentiseringskontext
 export interface AuthContextType {
     user: User | null,
+    register: (credentials: RegisterCredentials) => Promise<void>, // Funktion för registrering
     login: (credentials: LoginCredentials) => Promise<void>, // Funktion för inloggning
     logout: () => void // Funktion för utloggning
 }
