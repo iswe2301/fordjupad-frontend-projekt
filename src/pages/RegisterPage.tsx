@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
 const RegisterPage = () => {
-    
+
     // States
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -22,12 +22,12 @@ const RegisterPage = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Hooks
-    const { register } = useAuth(); // Importera register-funktionen från AuthContext
+    const { register, loading } = useAuth(); // Importera register-funktionen och loading från AuthContext
     const navigate = useNavigate(); // Importera useNavigate från react-router-dom
 
     // Hantera formulär-submission
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        
+
         e.preventDefault(); // Förhindra att formuläret skickas
 
         // Nollställ eventuella felmeddelanden
@@ -80,7 +80,7 @@ const RegisterPage = () => {
                 // Visa felmeddelande för övriga fel
                 setError(error.message || "Registreringen misslyckades. Försök igen.");
             }
-        } 
+        }
     };
 
     return (
@@ -136,7 +136,10 @@ const RegisterPage = () => {
                         {passwordError && <div className="error-text">{passwordError}</div>}
                     </div>
 
-                    <button type="submit">Skapa konto</button>
+                    {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Skapar konto..." : "Skapa konto"}
+                    </button>
                 </form>
 
                 {/* Länk tillbaka till login */}

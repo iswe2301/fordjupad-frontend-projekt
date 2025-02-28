@@ -18,7 +18,7 @@ const LoginPage = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Hooks
-  const { login, user } = useAuth(); // Importera funktionen login och user från AuthContext
+  const { login, user, loading } = useAuth(); // Importera login, user och loading från AuthContext
   const navigate = useNavigate(); // Importera funktionen useNavigate från react-router-dom
 
   // Kontrollera om användaren är inloggad vid rendering av sidan
@@ -30,7 +30,7 @@ const LoginPage = () => {
 
   // Funktion för att hantera skickandet av formuläret
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    
+
     // Förhindra att formuläret skickas
     e.preventDefault();
 
@@ -84,7 +84,7 @@ const LoginPage = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="email">E-postadress <span style={{color: "red"}}>*</span></label>
+            <label htmlFor="email">E-postadress <span style={{ color: "red" }}>*</span></label>
             <input
               type="email"
               id="email"
@@ -95,7 +95,7 @@ const LoginPage = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Lösenord <span style={{color: "red"}}>*</span></label>
+            <label htmlFor="password">Lösenord <span style={{ color: "red" }}>*</span></label>
             <input
               type="password"
               id="password"
@@ -105,7 +105,10 @@ const LoginPage = () => {
             {passwordError && <div className="error-text">{passwordError}</div>}
           </div>
 
-          <button type="submit">Logga in</button>
+          {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
+          <button type="submit" disabled={loading}>
+            {loading ? "Loggar in..." : "Logga in"}
+          </button>
         </form>
         {/* Länk till registreringssidan */}
         <p className="register-link">
