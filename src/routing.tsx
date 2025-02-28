@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom"; // Importera createBrowserRouter
 import HomePage from "./pages/HomePage"; // Importera HomePage
 import LoginPage from "./pages/LoginPage"; // Importera LoginPage
+import ProfilePage from "./pages/ProfilePage"; // Importera ProfilePage
 import Layout from "./components/Layout"; // Importera Layout
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Skapa en router för webbplatsens sidor
 const router = createBrowserRouter([
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
             {
                 path: "/logga-in",
                 element: <LoginPage />
+            },
+            {
+                path: "/mina-sidor",
+                element: (
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                )
             }
         ]
     }
