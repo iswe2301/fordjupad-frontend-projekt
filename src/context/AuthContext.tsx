@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, ReactNode, useEffect } from "react"; // Importera nödvändiga moduler
-import { User, LoginCredentials, AuthResponse, AuthContextType } from "../types/auth.types"; // Importera nödvändiga typer
+import { User, RegisterCredentials, LoginCredentials, AuthResponse, AuthContextType } from "../types/auth.types"; // Importera nödvändiga typer
 
 // Skapa en kontext för autentisering
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -14,6 +14,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // States
     const [user, setUser] = useState<User | null>(null);
+
+    // Funktion för att registrera en användare
+    const register = async (credentials: RegisterCredentials) => {
+        try {
+            // Gör ett anrop till API:et för att registrera användaren
+            const res = await fetch("http://localhost:5000/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(credentials)
+            });
+
+            // Kasta ett fel om registreringen misslyckades
+            if (!res.ok) {
+                const errorData = await res.json(); // Hämta felmeddelandet från svaret
+                throw new Error(errorData.message || "Registreringen misslyckades. Försök igen.");
+            }
+
+            // Konvertera svaret till JSON
+            const data: AuthResponse = await res.json();
+
+            // Spara användaren i staten och token i localStorage
+            setUser(data.user);
+            localStorage.setItem("token", data.token);
+        }
+        catch (error) {
+            throw error; // Kasta ett fel om något gick fel
+        }
+    }
 
     // Funktion för att logga in
     const login = async (credentials: LoginCredentials) => {
@@ -91,7 +121,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Returnera autentiseringskontexten
     return (
         // Användaren och funktionerna för inloggning och utloggning skickas som värde till kontexten
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, register, login, logout }}>
             {children} {/* Rendera barnkomponenter */}
         </AuthContext.Provider>
     );
