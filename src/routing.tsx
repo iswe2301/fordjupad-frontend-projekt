@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"; // Importera createBrows
 import HomePage from "./pages/HomePage"; // Importera HomePage
 import LoginPage from "./pages/LoginPage"; // Importera LoginPage
 import ProfilePage from "./pages/ProfilePage"; // Importera ProfilePage
+import RegisterPage from "./pages/RegisterPage"; // Importera RegisterPage
 import Layout from "./components/Layout"; // Importera Layout
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
             {
                 path: "/logga-in",
                 element: <LoginPage />
+            },
+            {
+                path: "/registrera",
+                element: <RegisterPage />
             },
             {
                 path: "/mina-sidor",
