@@ -35,4 +35,28 @@ export const fetchBooks = async (query: string, page: number = 0) : Promise<Book
     }
 };
 
+// Funktion för att hämta en specifik bok från Google Books API
+export const fetchBook = async (id: string): Promise<Book | null> => {
+    try {
+        // Anropa Google Books API med bokens ID
+        const response = await fetch(
+            `https://www.googleapis.com/books/v1/volumes/${id}`
+        );
 
+        // Kasta ett fel om anropet inte lyckades
+        if (!response.ok) {
+            throw new Error("Kunde inte hämta boken");
+        }
+
+        // Konvertera svaret till JSON-format
+        const data: Book = await response.json();
+
+        // Returnera boken från svaret, eller null om ingen bok hittades
+        return data || null;
+
+    } catch (error) {
+        // Logga felmeddelande och returnera null om något gick fel
+        console.error("Fel vid hämtning av bok:", error);
+        return null;
+    }
+};
