@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Book } from "../types/book.types";
 import { fetchBook } from "../services/googleBooksApi";
+import Reviews from "../components/Review";
 
 // Komponent för att visa detaljer om en bok
 const BookDetailPage: React.FC = () => {
@@ -65,8 +66,8 @@ const BookDetailPage: React.FC = () => {
 
             {/* Visa bokinformationen endast om den finns */}
             {!loading && !error && book && (
-            <><div className="d-flex flex-column flex-md-row align-items-start">
-                {/* Bild på boken, src anropar getBookImage() */}
+                <><div className="d-flex flex-column flex-md-row align-items-start">
+                    {/* Bild på boken, src anropar getBookImage() */}
                     {book.volumeInfo.imageLinks?.medium && (
                         <img src={getBookImage()} alt={book.volumeInfo.title} className="img-fluid me-md-4 mb-3 mb-md-0" />
                     )}
@@ -81,8 +82,13 @@ const BookDetailPage: React.FC = () => {
                         <p><strong>Språk:</strong> {book.volumeInfo.language || "Okänt"}</p>
                         <p><strong>Kategorier:</strong> {book.volumeInfo.categories?.join(", ") || "Okänt"}</p>
                     </div>
+                </div>
+                    <h3 className="mt-4 mb-4">Beskrivning</h3>
                     {/* Använder dangerouslySetInnerHTML för att rendera HTML */}
-                </div><h3 className="mt-4 mb-4">Beskrivning</h3><div dangerouslySetInnerHTML={{ __html: book.volumeInfo.description ? book.volumeInfo.description : "Ingen beskrivning tillgänglig." }} /></>
+                    <div dangerouslySetInnerHTML={{ __html: book.volumeInfo.description ? book.volumeInfo.description : "Ingen beskrivning tillgänglig." }} />
+                    {/* Rendera recensionskomponent och skicka med bok-ID */}
+                    <Reviews bookId={id!} />
+                    </>
             )}
         </div>
     );
