@@ -7,7 +7,7 @@ const Layout = () => {
     return (
         <>
             <Header /> {/* Rendera Header */}
-            <main className="container my-4"> {/* Container för innehållet */}
+            <main className="container"> {/* Container för innehållet */}
                 <Outlet /> {/* Rendera innehållet för respektive sida */}
             </main>
             <Footer /> {/* Rendera Footer */}
