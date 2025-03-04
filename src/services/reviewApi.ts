@@ -32,7 +32,7 @@ export const getReviewsByUserId = async (userId: string, token: string): Promise
 };
 
 // Skapa en ny recension
-export const addReview = async (bookId: string, reviewText: string, rating: number, token: string): Promise<Review> => {
+export const addReview = async (bookId: string, bookTitle: string, reviewText: string, rating: number, token: string): Promise<Review> => {
     try {
         // Skicka en POST-förfrågan med recensionens data
         const response = await fetch(`${URL}/`, {
@@ -41,7 +41,7 @@ export const addReview = async (bookId: string, reviewText: string, rating: numb
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}` // Skicka med token för att autentisera användaren
             },
-            body: JSON.stringify({ bookId, reviewText, rating })
+            body: JSON.stringify({ bookId, bookTitle, reviewText, rating })
         });
 
         if (!response.ok) throw new Error("Kunde inte skapa recension.");
