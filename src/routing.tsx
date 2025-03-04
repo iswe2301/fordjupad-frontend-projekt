@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage"; // Importera HomePage
 import LoginPage from "./pages/LoginPage"; // Importera LoginPage
 import ProfilePage from "./pages/ProfilePage"; // Importera ProfilePage
 import RegisterPage from "./pages/RegisterPage"; // Importera RegisterPage
+import BookDetailPage from "./pages/BookDetailPage";
 import Layout from "./components/Layout"; // Importera Layout
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <HomePage />
+            },
+            {
+                path: "/bok/:id",
+                element: <BookDetailPage />
             },
             {
                 path: "/logga-in",
