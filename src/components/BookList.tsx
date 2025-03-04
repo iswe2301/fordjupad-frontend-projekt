@@ -18,6 +18,7 @@ const BookList: React.FC<BookListProps> = ({ books, hasSearched, loading }) => {
                     // Loopa igenom arrayen med böcker och rendera en BookItem för varje bok
                     books.map((book) => (
                         <div key={book.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+                            {/* Skicka med bokobjektet till BookItem */}
                             <BookItem book={book} />
                         </div>
                     ))

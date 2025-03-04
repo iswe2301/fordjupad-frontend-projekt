@@ -4,7 +4,7 @@ import "./css/BookItem.css";
 
 // Interface för props som BookItem tar emot
 interface BookItemProps {
-    book: Book; // Interface för en bok
+    book: Book; // Bokobjekt som ska visas
 }
 
 // Komponent som renderar ett kort för en bok
