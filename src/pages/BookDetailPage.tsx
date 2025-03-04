@@ -29,7 +29,6 @@ const BookDetailPage: React.FC = () => {
                 return;
             }
             const data = await fetchBook(id); // Hämta bokdata
-            console.log(data);
             setBook(data); // Uppdatera state med bokdata
         } catch (err) {
             setError("Kunde inte ladda bokinformationen."); // Sätt felmeddelande i state
