@@ -3,35 +3,43 @@ import { fetchBooks } from "../services/googleBooksApi"; // Importera funktion f
 import SearchBar from "../components/SearchBar"; // Importera komponent för sökfält
 import BookList from "../components/BookList"; // Importera komponent för att visa böcker
 import { Book } from "../types/book.types"; // Importera interface för böcker
+import FilterBar from "../components/FilterBar";
+import { useSearchParams } from "react-router-dom";
 
 // Komponent för startsidan
 const HomePage: React.FC = () => {
 
   // States
   const [books, setBooks] = useState<Book[]>([]);
-  const [query, setQuery] = useState<string>("");
   const [page, setPage] = useState<number>(0); // Initialt sida 0
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // För att kolla om fler resultat finns
   const [hasSearched, setHasSearched] = useState(false); // För att visa meddelande om inga resultat hittades
 
-  // Hämta random böcker vid rendering av komponenten
-  useEffect(() => {
-    fetchRandomBooks();
-  }, []);
+  // Hämta URL-parametrar för söksträng och kategori
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || ""; // Hämta söksträng från URL
+  const category = searchParams.get("category") || ""; // Hämta kategori från URL
 
-  // Funktion för att hämta random böcker
-  const fetchRandomBooks = async () => {
+
+  // Körs när komponenten renderas om
+  useEffect(() => {
+    getBooks(); // Hämta böcker vid första render
+  }, [query, category]); // Uppdatera vid ändring av söksträng eller kategori
+
+  // Funktion för att hämta böcker från Google Books API
+  const getBooks = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-      const randomQueries = ["fiction", "science", "history", "technology", "adventure"];
-      const randomQuery = randomQueries[Math.floor(Math.random() * randomQueries.length)];
-      const results = await fetchBooks(randomQuery, 0);
+      // Om query finns, använd den. Annars använd kategorin. Om inget finns, använd "fiction".
+      const searchQuery = query.trim() || category || "fiction";
+      const results = await fetchBooks(searchQuery, 0, category); // Hämta böcker
       setBooks(results);
+      setHasMore(results.length === 12);
     } catch (error) {
-      setError("Kunde inte hämta rekommenderade böcker. Försök igen.");
+      setError("Kunde inte hämta böcker. Försök igen.");
     } finally {
       setLoading(false);
     }
@@ -40,12 +48,12 @@ const HomePage: React.FC = () => {
   // Funktion för att söka efter böcker
   const handleSearch = async (newQuery: string) => {
     try {
+      setSearchParams({ query: newQuery, category });
       setLoading(true);
       setError(null);
-      setQuery(newQuery);
       setPage(0);
       setHasSearched(true);
-      const results = await fetchBooks(newQuery, 0);
+      const results = await fetchBooks(newQuery, 0, category);
       setBooks(results);
       setHasMore(results.length === 12);
     } catch (error) {
@@ -55,13 +63,44 @@ const HomePage: React.FC = () => {
     }
   };
 
+  // Funktion för att filtrera böcker efter kategori
+  const handleCategoryChange = async (newCategory: string) => {
+    setSearchParams({ query, category: newCategory }); // Uppdatera URL-parametrar
+
+    // Om det redan finns en aktiv sökning, uppdatera resultaten direkt
+    if (query.trim()) {
+      try {
+        setLoading(true);
+        setError(null);
+        setPage(0);
+        setHasSearched(true);
+
+        // Om ingen query finns, använd kategorin som sökterm
+        const searchQuery = query.trim() ? query : newCategory;
+
+        // Hämta böcker baserat på söksträng och kategori
+        const results = await fetchBooks(searchQuery, 0, newCategory);
+        setBooks(results);
+        setHasMore(results.length === 12);
+      } catch (error) {
+        setError("Kunde inte hämta böcker. Försök igen.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   // Funktion för att ladda fler böcker
   const loadMore = async () => {
     try {
       setLoading(true);
       setError(null);
       const nextPage = page + 1;
-      const results = await fetchBooks(query, nextPage);
+
+      // Använd query, annars kategori. Om inget finns, använd default "fiction".
+      const searchQuery = query.trim() || category || "fiction";
+
+      const results = await fetchBooks(searchQuery, nextPage, category);
 
       if (results.length > 0) {
         // Lägg till nya böcker utan dubbletter
@@ -88,6 +127,8 @@ const HomePage: React.FC = () => {
       <h1 className="mb-4 px-2">Sök efter böcker</h1>
       {/* Rendera sökfält och skicka med funktionen för att söka */}
       <SearchBar onSearch={handleSearch} />
+      {/* Filtreringskomponent */}
+      <FilterBar onCategoryChange={handleCategoryChange} selectedCategory={category} />
       {/* Visa felmeddelande om något gick fel */}
       {error && <p className="text-danger my-3 text-center">{error}</p>}
       {/* Visa laddningsmeddelande om det pågår en sökning */}
