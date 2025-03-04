@@ -1,4 +1,4 @@
-// Interface för att representera en bok från Google Books API
+// Interface för att representera böcker från Google Books API
 export interface Book {
     id: string; // Unikt ID för boken
     volumeInfo: {
@@ -8,6 +8,9 @@ export interface Book {
       description?: string; // Beskrivning av boken
       imageLinks?: {
         thumbnail?: string; // Länk till bokens framsida
+        small?: string;
+        medium?: string;
+        large?: string;
       };
       publishedDate?: string; // Publiceringsdatum
       publisher?: string; // Förlaget som gav ut boken
@@ -16,4 +19,3 @@ export interface Book {
       language?: string; // Språk
     };
   }
-  
