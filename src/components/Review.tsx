@@ -47,8 +47,8 @@ const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
                 <div>
                     {/* Loopa igenom recensioner och rendera dem */}
                     {reviews.map((review) => (
-                        <div key={review.id} className="border p-3 mb-2 rounded">
-                            <p><strong>{review.userId.name}</strong> gav {review.rating}/5 ⭐</p>
+                        <div key={review._id} className="border p-3 mb-2 rounded">
+                            <p>{review.userId.firstname} gav {"⭐".repeat(review.rating)}</p>
                             <p>{review.reviewText}</p>
                             <small className="text-muted">
                                 {/* Konvertera datum */}
