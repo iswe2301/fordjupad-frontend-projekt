@@ -4,6 +4,8 @@ import { Book } from "../types/book.types";
 import { fetchBook } from "../services/googleBooksApi";
 import Reviews from "../components/Review";
 import { useNavigate } from "react-router-dom";
+import ReviewForm from "../components/ReviewForm";
+import { useAuth } from "../context/AuthContext";
 
 // Komponent för att visa detaljer om en bok
 const BookDetailPage: React.FC = () => {
@@ -13,6 +15,9 @@ const BookDetailPage: React.FC = () => {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const { user } = useAuth(); // Hämta inloggad användare
+    const token = localStorage.getItem("token"); // Hämta token från localStorage
 
     const navigate = useNavigate(); // Hook för att navigera mellan sidor
 
@@ -90,9 +95,13 @@ const BookDetailPage: React.FC = () => {
                     <div dangerouslySetInnerHTML={{ __html: book.volumeInfo.description ? book.volumeInfo.description : "Ingen beskrivning tillgänglig." }} />
                     {/* Rendera recensionskomponent och skicka med bok-ID */}
                     <Reviews bookId={id!} />
+                    {/* Om användaren är inloggad, visa formuläret för att lägga till recension och skicka med props till komponenten */}
+                    {user && token && (
+                        <ReviewForm bookId={id!} bookTitle={book.volumeInfo.title} token={token} onReviewAdded={fetchBookDetails} />
+                    )}
                     {/* Knapp för att gå tillbaka till föregående sida */}
                     <button className="btn btn-secondary mt-2" onClick={() => navigate(-1)}>Tillbaka</button>
-                    </>
+                </>
             )}
         </div>
     );
