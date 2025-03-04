@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./css/LoginPage.css";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -72,48 +71,60 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h1>Logga in</h1>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "70vh" }}>
+      <div className="col-12 col-md-6">
+        <div className="card shadow-sm p-4">
+          <h1 className="text-center mb-4">Logga in</h1>
 
-        <form onSubmit={handleSubmit}>
+          {/* Felmeddelande */}
           {error && (
-            <div className="error-message">
+            <div className="alert alert-danger">
               {error}
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="email">E-postadress <span style={{ color: "red" }}>*</span></label>
-            <input
-              type="email"
-              id="email"
-              value={email} // Koppla värdet till email-state
-              onChange={(e) => setEmail(e.target.value)} // Uppdatera email-state vid ändring
-            />
-            {emailError && <div className="error-text">{emailError}</div>}
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                E-postadress <span className="text-danger">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                value={email} // Koppla värdet till email-state
+                onChange={(e) => setEmail(e.target.value)} // Uppdatera email-state vid ändring
+              />
+              {emailError && <div className="text-danger small">{emailError}</div>}
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Lösenord <span style={{ color: "red" }}>*</span></label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {passwordError && <div className="error-text">{passwordError}</div>}
-          </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Lösenord <span className="text-danger">*</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                className="form-control"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {passwordError && <div className="text-danger small">{passwordError}</div>}
+            </div>
 
-          {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
-          <button type="submit" disabled={loading}>
-            {loading ? "Loggar in..." : "Logga in"}
-          </button>
-        </form>
-        {/* Länk till registreringssidan */}
-        <p className="register-link">
-          Ny användare? <Link to="/registrera">Skapa konto</Link>
-        </p>
+            {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary mt-2 mb-2" disabled={loading}>
+                {loading ? "Loggar in..." : "Logga in"}
+              </button>
+            </div>
+          </form>
+
+          {/* Länk till registreringssidan */}
+          <p className="text-center mt-3">
+            Ny användare? <Link to="/registrera" className="text-primary">Skapa konto</Link>
+          </p>
+        </div>
       </div>
     </div>
   )
