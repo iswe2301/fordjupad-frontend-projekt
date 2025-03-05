@@ -73,9 +73,9 @@ const BookLike: React.FC<BookLikeProps> = ({ bookId, onUnlike }) => {
                 className={`btn ${liked ? "btn-primary" : "btn-outline-primary"}`}
                 onClick={handleLike}
             > {/* Visa olika text och ikon beroende på om boken är gillad */}
-                {liked ? "🤍 Gillad" : "💙 Gilla"} ({likes})
+                <i className={`bi ${liked ? "bi-heart-fill" : "bi-heart"}`}></i> {liked ? " Gillad" : " Gilla"} ({likes})
             </button>
-            {error && <p className="text-danger mt-4">{error}</p>}
+            {error && <p className="text-danger mt-4"><i className="bi bi-exclamation-triangle"></i> {error}</p>}
         </div>
     );
 };
