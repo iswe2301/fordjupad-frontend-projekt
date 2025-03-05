@@ -5,10 +5,11 @@ import { useAuth } from "../context/AuthContext";
 // Props för komponenten
 interface BookLikeProps {
     bookId: string; // Bok-ID
+    onUnlike?: () => void; // Funktion för att ta bort gillning
 }
 
 // Komponent för att gilla en bok
-const BookLike: React.FC<BookLikeProps> = ({ bookId }) => {
+const BookLike: React.FC<BookLikeProps> = ({ bookId, onUnlike }) => {
 
     // Hämta inloggad användare och token
     const { user } = useAuth();
@@ -54,6 +55,7 @@ const BookLike: React.FC<BookLikeProps> = ({ bookId }) => {
                 await unlikeBook(bookId, token); // Ogilla boken
                 setLiked(false); // Uppdatera state
                 setLikes((prev) => Math.max(0, prev - 1)); // Uppdatera antal likes (minst 0)
+                if(onUnlike) onUnlike(); // Anropa onUnlike om funktionen finns
             } else {
                 await likeBook(bookId, token); // Gilla boken
                 setLiked(true); // Uppdatera state
