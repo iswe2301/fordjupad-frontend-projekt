@@ -26,19 +26,22 @@ const HomePage: React.FC = () => {
 
   // Körs när komponenten renderas om
   useEffect(() => {
-    getBooks(); // Hämta böcker vid första render
+    // Om query finns, använd den. Annars använd kategorin. Om inget finns, använd "fiction".
+    const searchQuery = query.trim() || category || "fiction";
+    getBooks(searchQuery, 0); // Hämta böcker och skicka med söksträng och sida
   }, [query, category]); // Uppdatera vid ändring av söksträng eller kategori
 
   // Funktion för att hämta böcker från Google Books API
-  const getBooks = async () => {
+  const getBooks = async (searchQuery: string, pageNumber: number) => {
+    if (!searchQuery) return; // Om ingen söksträng finns, avbryt
     setLoading(true);
     setError(null);
     try {
-      // Om query finns, använd den. Annars använd kategorin. Om inget finns, använd "fiction".
-      const searchQuery = query.trim() || category || "fiction";
       const results = await fetchBooks(searchQuery, 0, category); // Hämta böcker
       setBooks(results);
+      setPage(pageNumber);
       setHasMore(results.length === 12);
+      setHasSearched(true);
     } catch (error) {
       setError("Kunde inte hämta böcker. Försök igen.");
     } finally {
@@ -46,63 +49,31 @@ const HomePage: React.FC = () => {
     }
   };
 
-  // Funktion för att söka efter böcker
-  const handleSearch = async (newQuery: string) => {
-    try {
+  // Funktion för att hantera sökning
+  const handleSearch = (newQuery: string) => {
+    // Om söksträngen är tom, rensa query-parametern. Annars uppdatera query-parametern
+    if (newQuery.trim() === "") {
+      setSearchParams({ query: "", category });
+    } else {
       setSearchParams({ query: newQuery, category });
-      setLoading(true);
-      setError(null);
-      setPage(0);
-      setHasSearched(true);
-      const results = await fetchBooks(newQuery, 0, category);
-      setBooks(results);
-      setHasMore(results.length === 12);
-    } catch (error) {
-      setError("Kunde inte hämta sökresultat. Försök igen.");
-    } finally {
-      setLoading(false);
     }
   };
+  
 
-  // Funktion för att filtrera böcker efter kategori
-  const handleCategoryChange = async (newCategory: string) => {
+  // Funktion för att hantera ändring av kategori
+  const handleCategoryChange = (newCategory: string) => {
     setSearchParams({ query, category: newCategory }); // Uppdatera URL-parametrar
-
-    // Om det redan finns en aktiv sökning, uppdatera resultaten direkt
-    if (query.trim()) {
-      try {
-        setLoading(true);
-        setError(null);
-        setPage(0);
-        setHasSearched(true);
-
-        // Om ingen query finns, använd kategorin som sökterm
-        const searchQuery = query.trim() ? query : newCategory;
-
-        // Hämta böcker baserat på söksträng och kategori
-        const results = await fetchBooks(searchQuery, 0, newCategory);
-        setBooks(results);
-        setHasMore(results.length === 12);
-      } catch (error) {
-        setError("Kunde inte hämta böcker. Försök igen.");
-      } finally {
-        setLoading(false);
-      }
-    }
   };
 
   // Funktion för att ladda fler böcker
   const loadMore = async () => {
+    setLoadingMore(true);
+    setError(null);
+    const nextPage = page + 1;
+    // Använd query, annars kategori. Om inget finns, använd default "fiction".
+    const searchQuery = query.trim() || category || "fiction";
     try {
-      setLoadingMore(true);
-      setError(null);
-      const nextPage = page + 1;
-
-      // Använd query, annars kategori. Om inget finns, använd default "fiction".
-      const searchQuery = query.trim() || category || "fiction";
-
       const results = await fetchBooks(searchQuery, nextPage, category);
-
       if (results.length > 0) {
         // Lägg till nya böcker utan dubbletter
         setBooks((prevBooks) => {
@@ -110,7 +81,6 @@ const HomePage: React.FC = () => {
           results.forEach(book => uniqueBooks.set(book.id, book));
           return Array.from(uniqueBooks.values());
         });
-
         setPage(nextPage);
         setHasMore(results.length === 12);
       } else {
