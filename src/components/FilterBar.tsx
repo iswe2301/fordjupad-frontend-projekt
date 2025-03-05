@@ -52,20 +52,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ onCategoryChange, selectedCategor
                 Kategorier
             </label>
             {/* Dropdown för att välja kategori */}
-            <select
-                id="categoryFilter"
-                className="form-select"
-                value={category}
-                onChange={handleCategoryChange}
-            >
-                <option value="">Alla kategorier</option>
-                {/* Loopa igenom kategorier och skapa options */}
-                {categories.map(({ value, label }) => (
-                    <option key={value} value={value}>
-                        {label}
-                    </option>
-                ))}
-            </select>
+            <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-filter"></i></span>
+                <select
+                    id="categoryFilter"
+                    className="form-select"
+                    value={category}
+                    onChange={handleCategoryChange}
+                >
+                    <option value="">Alla kategorier</option>
+                    {/* Loopa igenom kategorier och skapa options */}
+                    {categories.map(({ value, label }) => (
+                        <option key={value} value={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+            </div>
         </div>
     );
 };
