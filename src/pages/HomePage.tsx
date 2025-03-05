@@ -14,6 +14,7 @@ const HomePage: React.FC = () => {
   const [page, setPage] = useState<number>(0); // Initialt sida 0
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true); // För att kolla om fler resultat finns
   const [hasSearched, setHasSearched] = useState(false); // För att visa meddelande om inga resultat hittades
 
@@ -93,7 +94,7 @@ const HomePage: React.FC = () => {
   // Funktion för att ladda fler böcker
   const loadMore = async () => {
     try {
-      setLoading(true);
+      setLoadingMore(true);
       setError(null);
       const nextPage = page + 1;
 
@@ -118,7 +119,7 @@ const HomePage: React.FC = () => {
     } catch (error) {
       setError("Kunde inte ladda fler böcker. Försök igen.");
     } finally {
-      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -130,24 +131,23 @@ const HomePage: React.FC = () => {
       {/* Filtreringskomponent */}
       <FilterBar onCategoryChange={handleCategoryChange} selectedCategory={category} />
       {/* Visa felmeddelande om något gick fel */}
-      {error && <p className="text-danger my-3 text-center">{error}</p>}
+      {error && <p className="text-danger my-3 text-center"><i className="bi bi-exclamation-triangle"></i> {error}</p>}
       {/* Visa laddningsmeddelande om det pågår en sökning */}
-      {loading && <p className="my-3 text-center">Laddar...</p>}
+      {loading && !loadingMore && <p className="my-3 text-center"><i className="bi bi-arrow-repeat"></i> Laddar...</p>}
       {/* Rendera lista med böcker och skicka med resultat, sökstatus och laddningsstatus */}
       <BookList books={books} hasSearched={hasSearched} loading={loading} />
       {/* Om det pågår en laddning, visa laddningsmeddelande. Annars visa knapp om fler resultat finns */}
-      <div className="d-flex justify-content-center mt-4">
-        {loading ? (
-          <p className="text-center mt-4">Laddar fler böcker...</p>
-        ) : (
-          hasMore && (
+      {!loading && hasMore && (
+        <div className="d-flex justify-content-center mt-4">
+          {loadingMore ? (
+            <p className="text-center mt-4"><i className="bi bi-arrow-repeat"></i> Laddar fler böcker...</p>
+          ) : (
             <button onClick={loadMore} className="btn btn-secondary mt-4" style={{ width: "200px" }}>
-              Visa fler böcker
+              <i className="bi bi-plus-circle"></i> Visa fler böcker
             </button>
-          )
-        )}
-      </div>
-
+          )}
+        </div>
+      )}
     </div>
   );
 };
