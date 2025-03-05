@@ -22,3 +22,27 @@ h4 {
 h5 {
   font-size: 1rem;
 }
+
+/* Marginaler för ikoner */
+.bi {
+  margin-right: 2px;
+}
+
+/* Responsivitet */
+@media screen and (max-width: 768px) {
+  main {
+    margin: 2rem auto !important;
+  }
+
+  nav ul {
+    padding: 2rem 0;
+  }
+
+  nav ul li {
+    padding: 1rem 0;
+  }
+
+  .last {
+    margin-right: 1.5rem;
+  }
+}
