@@ -64,10 +64,10 @@ const BookDetailPage: React.FC = () => {
     return (
         <div className="container mt-4">
             {/* Visar laddningsmeddelande */}
-            {loading && <p>Laddar bokinformation...</p>}
+            {loading && <p><i className="bi bi-arrow-repeat"></i> Laddar bokinformation...</p>}
 
             {/* Visar felmeddelande om det finns ett fel */}
-            {error && <p className="text-danger">{error}</p>}
+            {error && <p className="text-danger"><i className="bi bi-exclamation-triangle"></i> {error}</p>}
 
             {/* Om boken inte finns efter laddning, visa meddelande */}
             {!loading && !error && !book && <p>Boken hittades inte.</p>}
@@ -103,7 +103,9 @@ const BookDetailPage: React.FC = () => {
                         <ReviewForm bookId={id!} bookTitle={book.volumeInfo.title} token={token} onReviewAdded={fetchBookDetails} />
                     )}
                     {/* Knapp för att gå tillbaka till föregående sida */}
-                    <button className="btn btn-secondary mt-2" onClick={() => navigate(-1)}>Tillbaka</button>
+                    <button className="btn btn-secondary mt-4" onClick={() => navigate(-1)} style={{ width: "180px" }}>
+                        <i className="bi bi-arrow-left"></i> Tillbaka
+                    </button>
                 </>
             )}
         </div>
