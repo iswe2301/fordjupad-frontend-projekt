@@ -17,6 +17,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onUpdate, onDelete }) =
     const [newText, setNewText] = useState(review.reviewText);
     const [newRating, setNewRating] = useState(review.rating);
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const [hoverRating, setHoverRating] = useState<number | null>(null);
 
     const { user } = useAuth(); // Hämta inloggad användare från context
 
@@ -41,28 +42,36 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onUpdate, onDelete }) =
                         rows={4}
                     />
 
-                    {/* Dropdown för att välja betyg med stjärnor */}
+                    {/* Betygsväljare med hover-effekt */}
                     <div className="mb-4">
-                        <label className="mt-3 mb-2">Betyg (1-5):</label><br></br>
-                        <select
-                            value={newRating} // Sätt värde till betyg i state
-                            onChange={(e) => setNewRating(Number(e.target.value))} // Uppdatera betyg i state
-                            className="w-full p-2 border rounded"
-                        >
-                            {/* Skapa en lista med 5 stjärnor där antal stjärnor matchar värdet */}
+                        <label className="mt-3 mb-2">Betyg (1-5):</label>
+                        <div className="d-flex gap-2">
+                            {/* Loopa igenom 5 stjärnor och rendera dem */}
                             {[1, 2, 3, 4, 5].map((num) => (
-                                <option key={num} value={num}>
-                                    {"⭐".repeat(num)}
-                                </option>
+                                <i
+                                    key={num}
+                                    // Kontrollera om betyg är mindre än eller lika med hoverRating eller newRating och sätt klasser
+                                    className={`bi ${num <= (hoverRating || newRating) ? "bi-star-fill text-warning" : "bi-star text-secondary"}`}
+                                    style={{ cursor: "pointer" }}
+                                    onMouseEnter={() => setHoverRating(num)} // Uppdatera hover-betyg vid mouseenter
+                                    onMouseLeave={() => setHoverRating(null)} // Återställ betyg vid mouseleave
+                                    onClick={() => setNewRating(num)} // Uppdatera valt betyg
+                                ></i>
                             ))}
-                        </select>
+                        </div>
                     </div>
                 </div>
             ) : (
                 <>
                     {/* Visa recensionstext och betyg */}
                     <p className="mt-2">{review.reviewText}</p>
-                    <p className="mt-1">Betyg: {"⭐".repeat(review.rating)}</p>
+                    <p className="mt-1">
+                        Betyg:{" "}
+                        {/* Skapa en array med stjärnor baserat på betyg */}
+                        {[...Array(review.rating)].map((_, i) => (
+                            <i key={i} className="bi bi-star-fill text-warning"></i>
+                        ))}
+                    </p>
                     {/* Kontrollera om användaren är inloggad och inte är admin */}
                     {!user?.role || user.role !== "admin" ? (
                         <p className="mt-1 text-muted small">Skapad: {new Date(review.createdAt).toLocaleDateString()}</p>
@@ -74,23 +83,23 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onUpdate, onDelete }) =
                 {/* Om redigering är aktiv, visa endast spara/avbryt */}
                 {isEditing ? (
                     <div style={{ display: "flex", gap: "10px" }}>
-                        <button className="btn btn-primary" onClick={handleSave} style={{ width: "100px" }}>
-                            Spara
+                        <button className="btn btn-primary" onClick={handleSave} style={{ width: "120px" }}>
+                            <i className="bi bi-check-lg"></i> Spara
                         </button>
-                        <button className="btn btn-secondary" onClick={() => setIsEditing(false)} style={{ width: "100px" }}>
-                            Avbryt
+                        <button className="btn btn-secondary" onClick={() => setIsEditing(false)} style={{ width: "120px" }}>
+                            <i className="bi bi-x-circle"></i> Avbryt
                         </button>
                     </div>
                 ) : confirmDelete ? (
                     // Om radering är aktiv, visa endast bekräftelse/avbryt
                     <div className="flex flex-col items-center">
-                        <p className="text-danger"><strong>Är du säker på att du vill radera denna recension?</strong></p>
+                        <p className="text-danger"><i className="bi bi-exclamation-triangle"></i><strong> Är du säker på att du vill radera denna recension?</strong></p>
                         <div style={{ display: "flex", gap: "10px" }}>
-                            <button className="btn btn-danger" onClick={() => onDelete(review._id)} style={{ width: "100px" }}>
-                                Radera
+                            <button className="btn btn-danger" onClick={() => onDelete(review._id)} style={{ width: "120px" }}>
+                                <i className="bi bi-trash"></i> Radera
                             </button>
-                            <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)} style={{ width: "100px" }}>
-                                Avbryt
+                            <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)} style={{ width: "120px" }}>
+                                <i className="bi bi-x-circle"></i> Avbryt
                             </button>
                         </div>
                     </div>
@@ -99,14 +108,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onUpdate, onDelete }) =
                     <>
                         {/* Visa redigera-knapp endast för vanliga användare, inte admin */}
                         {user?.role !== "admin" && (
-                            <button className="btn btn-warning" onClick={() => setIsEditing(true)} style={{ width: "100px" }}>
-                                Redigera
+                            <button className="btn btn-warning" onClick={() => setIsEditing(true)} style={{ width: "120px" }}>
+                                <i className="bi bi-pencil-square"></i> Redigera
                             </button>
                         )}
 
                         {/* Visa raderingsknapp för både admin och vanliga användare */}
-                        <button className="btn btn-danger" onClick={() => setConfirmDelete(true)} style={{ width: "100px" }}>
-                            Radera
+                        <button className="btn btn-danger" onClick={() => setConfirmDelete(true)} style={{ width: "120px" }}>
+                            <i className="bi bi-trash"></i> Radera
                         </button>
                     </>
                 )}

@@ -18,6 +18,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, bookTitle, token, onRev
     const [addingReview, setAddingReview] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [reviewTextError, setReviewTextError] = useState<string | null>(null);
+    const [hoverRating, setHoverRating] = useState<number | null>(null);
 
     // Funktion för att lägga till recension
     const handleAddReview = async () => {
@@ -47,9 +48,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, bookTitle, token, onRev
 
     return (
         <div className="mt-5">
-            <h3>Lägg till en recension</h3>
+            <h3 className="mb-4">Lägg till en recension</h3>
             {/* Visa ev felmeddelande */}
-            {error && <p className="text-danger small">{error}</p>}
+            {error && <p className="text-danger small"><i className="bi bi-exclamation-triangle"></i> {error}</p>}
             <textarea
                 className="form-control"
                 placeholder="Skriv din recension här..."
@@ -58,35 +59,42 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ bookId, bookTitle, token, onRev
                 rows={4}
             ></textarea>
             {/* Visa ev felmeddelande för validering */}
-            {reviewTextError && <p className="text-danger small mt-2">{reviewTextError}</p>}
-            <div className="mt-2">
-                <label>Betyg (1-5):</label>
-                <select
-                    className="form-select w-25"
-                    value={rating} // Koppla värdet till state
-                    onChange={(e) => setRating(Number(e.target.value))} // Uppdatera state vid ändring
-                >
-                    {/* Skapa en lista med 5 stjärnor där antal stjärnor matchar värdet */}
+            {reviewTextError && <p className="text-danger small mt-2"><i className="bi bi-exclamation-triangle"></i> {reviewTextError}</p>}
+            {/* Betygsväljare med hover-effekt */}
+            <div className="mb-4">
+                <label className="mt-3 mb-2">Betyg (1-5):</label>
+                <div className="d-flex gap-2">
+                    {/* Loopa igenom 5 stjärnor och rendera dem */}
                     {[1, 2, 3, 4, 5].map((num) => (
-                        <option key={num} value={num}>
-                            {/* Visa antal stjärnor som med nummer och stjärna-symbol */}
-                            {num} {"⭐".repeat(num)}
-                        </option>
+                        <i
+                            key={num}
+                            // Kontrollera om betyg är mindre än eller lika med hoverRating eller rating och sätt klasser
+                            className={`bi ${num <= (hoverRating ?? rating) ? "bi-star-fill text-warning" : "bi-star text-secondary"}`}
+                            style={{ cursor: "pointer" }}
+                            onMouseEnter={() => setHoverRating(num)} // Uppdatera hover-betyg vid mouseenter
+                            onMouseLeave={() => setHoverRating(null)} // Återställ betyg vid mouseleave
+                            onClick={() => setRating(num)} // Uppdatera valt betyg
+                        ></i>
                     ))}
-                </select>
+                </div>
             </div>
-            <button
-                className="btn btn-primary mt-2"
-                /* Anropa funktionen för att lägga till recension */
-                onClick={handleAddReview}
-                /* Inaktivera knappen om recensionen skapas */
-                disabled={addingReview}
-            >
-                {/* Visa "Skapar recension" om recensionen skapas, annars "Skapa recension" */}
-                {addingReview ? "Skapar recension..." : "Skapa recension"}
-            </button>
-        </div>
-    );
+                <button
+                    className="btn btn-primary mt-2"
+                    /* Anropa funktionen för att lägga till recension */
+                    onClick={handleAddReview}
+                    /* Inaktivera knappen om recensionen skapas */
+                    disabled={addingReview}
+                    style={{ width: "180px" }}
+                >
+                    {/* Visa "Skapar recension" om recensionen skapas, annars "Skapa recension" */}
+                    {addingReview ? (
+                        <><i className="bi bi-arrow-repeat"></i> Skapar recension...</>
+                    ) : (
+                        <><i className="bi bi-plus-lg"></i> Skapa recension</>
+                    )}
+                </button>
+            </div>
+            );
 };
 
-export default ReviewForm;
+            export default ReviewForm;
