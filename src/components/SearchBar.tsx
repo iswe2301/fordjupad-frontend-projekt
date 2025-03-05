@@ -21,6 +21,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         }
     };
 
+    // Funktion för att hantera input-ändringar
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Hämta söksträngen från input-fältet
+        const newQuery = e.target.value;
+
+        // Uppdatera state med den nya söksträngen
+        setQuery(newQuery);
+
+        // Om användaren rensar fältet, trigga en sökning med tom sträng
+        if (newQuery.trim() === "") {
+            onSearch("");
+        }
+    };
+
     return (
         // Formulär för att söka efter böcker, anropar handleSubmit vid inskickning
         <form onSubmit={handleSubmit} className="container">
@@ -29,7 +43,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                 <input
                     type="text"
                     value={query} // Koppla input-fältet till query-state
-                    onChange={(e) => setQuery(e.target.value)} // Uppdatera query-state vid ändring
+                    onChange={handleChange} // Anropa handleChange vid input-ändringar
                     placeholder="Sök efter en bok..."
                     className="form-control"
                 />
