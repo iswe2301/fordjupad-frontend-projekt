@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Book } from "../types/book.types";
 import { fetchBook } from "../services/googleBooksApi";
 import Reviews from "../components/Review";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
 import { useAuth } from "../context/AuthContext";
 import BookLike from "../components/BookLike";
@@ -62,7 +62,13 @@ const BookDetailPage: React.FC = () => {
     };
 
     return (
-        <div className="container mt-4">
+        <div className="container">
+            <nav aria-label="breadcrumb mb-4">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><Link to="/">Hem</Link></li>
+                    <li className="breadcrumb-item active" aria-current="page">{book?.volumeInfo.title || "Bokdetaljer"}</li>
+                </ol>
+            </nav>
             {/* Visar laddningsmeddelande */}
             {loading && <p><i className="bi bi-arrow-repeat"></i> Laddar bokinformation...</p>}
 
@@ -102,10 +108,12 @@ const BookDetailPage: React.FC = () => {
                     {user && token && (
                         <ReviewForm bookId={id!} bookTitle={book.volumeInfo.title} token={token} onReviewAdded={fetchBookDetails} />
                     )}
-                    {/* Knapp för att gå tillbaka till föregående sida */}
-                    <button className="btn btn-secondary mt-4" onClick={() => navigate(-1)} style={{ width: "180px" }}>
-                        <i className="bi bi-arrow-left"></i> Tillbaka
-                    </button>
+                    <div className="d-flex justify-content-end mt-4">
+                        {/* Navigate för att gå tillbaka till föregående sida samt scrolla till toppen av sidan efter 100 ms */}
+                        <button className="btn btn-secondary" onClick={() => { navigate(-1); setTimeout(() => window.scrollTo(0, 0), 100); }} style={{ width: "180px" }}>
+                            <i className="bi bi-arrow-left"></i> Tillbaka
+                        </button>
+                    </div>
                 </>
             )}
         </div>
