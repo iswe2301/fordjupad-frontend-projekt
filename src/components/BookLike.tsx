@@ -67,10 +67,10 @@ const BookLike: React.FC<BookLikeProps> = ({ bookId, onUnlike }) => {
     };
 
     return (
-        <div className="mb-4">
+        <div className="mb-4 mt-4">
             {/* Knapp för att gilla boken, anropa handleLike vid klick */}
             <button
-                className={`btn ${liked ? "btn-primary" : "btn-outline-primary"}`}
+                className={`btn btn-sm ${liked ? "btn-primary" : "btn-outline-primary"}`}
                 onClick={handleLike}
             > {/* Visa olika text och ikon beroende på om boken är gillad */}
                 <i className={`bi ${liked ? "bi-heart-fill" : "bi-heart"}`}></i> {liked ? " Gillad" : " Gilla"} ({likes})
