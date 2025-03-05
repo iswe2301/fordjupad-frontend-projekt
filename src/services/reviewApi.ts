@@ -2,6 +2,19 @@ import { Review } from "../types/review.types"; // Importera interface för rece
 
 const URL = "http://localhost:5000/api/reviews"; // API URL
 
+// Hämta alla recensioner
+export const getAllReviews = async (): Promise<Review[]> => {
+    try {
+        // Skicka en GET-förfrågan
+        const response = await fetch(URL);
+        if (!response.ok) throw new Error("Kunde inte hämta recensioner.");
+        return await response.json(); // Returnera recensioner som JSON
+    } catch (error) {
+        console.error("Fel vid hämtning av recensioner:", error);
+        return []; // Returnera en tom array om något gick fel
+    }
+};
+
 // Hämta alla recensioner för en viss bok
 export const getReviewsByBookId = async (bookId: string): Promise<Review[]> => {
     try {
