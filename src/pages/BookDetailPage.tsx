@@ -6,6 +6,7 @@ import Reviews from "../components/Review";
 import { useNavigate } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
 import { useAuth } from "../context/AuthContext";
+import BookLike from "../components/BookLike";
 
 // Komponent för att visa detaljer om en bok
 const BookDetailPage: React.FC = () => {
@@ -73,23 +74,25 @@ const BookDetailPage: React.FC = () => {
 
             {/* Visa bokinformationen endast om den finns */}
             {!loading && !error && book && (
-                <><div className="d-flex flex-column flex-md-row align-items-start">
-                    {/* Bild på boken, src anropar getBookImage() */}
-                    {book.volumeInfo.imageLinks?.medium && (
-                        <img src={getBookImage()} alt={book.volumeInfo.title} className="img-fluid me-md-4 mb-3 mb-md-0" />
-                    )}
-                    <div>
-                        {/* Bokinformation från API:et */}
-                        <h1 className="mb-4">{book.volumeInfo.title}</h1>
-                        <h2 className="mb-4">{book.volumeInfo.subtitle}</h2>
-                        <p><strong>Författare:</strong> {book.volumeInfo.authors?.join(", ") || "Okänd"}</p>
-                        <p><strong>Utgiven:</strong> {book.volumeInfo.publishedDate || "Okänt"}</p>
-                        <p><strong>Förlag:</strong> {book.volumeInfo.publisher || "Okänt"}</p>
-                        <p><strong>Antal sidor:</strong> {book.volumeInfo.pageCount || "Okänt"}</p>
-                        <p><strong>Språk:</strong> {book.volumeInfo.language || "Okänt"}</p>
-                        <p><strong>Kategorier:</strong> {book.volumeInfo.categories?.join(", ") || "Okänt"}</p>
+                // Rendera komponenten för att gilla boken och skicka med bok-ID
+                <><BookLike bookId={id!} />
+                    <div className="d-flex flex-column flex-md-row align-items-start">
+                        {/* Bild på boken, src anropar getBookImage() */}
+                        {book.volumeInfo.imageLinks?.medium && (
+                            <img src={getBookImage()} alt={book.volumeInfo.title} className="img-fluid me-md-4 mb-3 mb-md-0" />
+                        )}
+                        <div>
+                            {/* Bokinformation från API:et */}
+                            <h1 className="mb-4">{book.volumeInfo.title}</h1>
+                            <h2 className="mb-4">{book.volumeInfo.subtitle}</h2>
+                            <p><strong>Författare:</strong> {book.volumeInfo.authors?.join(", ") || "Okänd"}</p>
+                            <p><strong>Utgiven:</strong> {book.volumeInfo.publishedDate || "Okänt"}</p>
+                            <p><strong>Förlag:</strong> {book.volumeInfo.publisher || "Okänt"}</p>
+                            <p><strong>Antal sidor:</strong> {book.volumeInfo.pageCount || "Okänt"}</p>
+                            <p><strong>Språk:</strong> {book.volumeInfo.language || "Okänt"}</p>
+                            <p><strong>Kategorier:</strong> {book.volumeInfo.categories?.join(", ") || "Okänt"}</p>
+                        </div>
                     </div>
-                </div>
                     <h3 className="mt-4 mb-4">Beskrivning</h3>
                     {/* Använder dangerouslySetInnerHTML för att rendera HTML */}
                     <div dangerouslySetInnerHTML={{ __html: book.volumeInfo.description ? book.volumeInfo.description : "Ingen beskrivning tillgänglig." }} />
