@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Review } from "../types/review.types";
-import { getReviewsByUserId, updateReview, deleteReview } from "../services/reviewApi";
+import { getReviewsByUserId, updateReview, deleteReview, getAllReviews } from "../services/reviewApi";
 import ReviewCard from "../components/ReviewCard";
 
 // Profilsidan för inloggad användare
@@ -17,8 +17,8 @@ const ProfilePage = () => {
   // Hämta användarens recensioner vid rendering av komponenten
   useEffect(() => {
     // Kontrollera att användare och token finns
-    if(!loading && user && token) {
-    fetchUserReviews();
+    if (!loading && user && token) {
+      fetchUserReviews();
     }
   }, [user, token, loading]); // Uppdatera när användare eller token ändras eller laddning är klar
 
@@ -30,9 +30,15 @@ const ProfilePage = () => {
         setError("Du är inte inloggad. Logga in och försök igen.");
         return;
       }
-      // Hämta recensioner för användaren och skicka med id och token
-      const userReviews = await getReviewsByUserId(user._id, token);
-      setReviews(userReviews); // Spara recensioner i state
+      // Kontrollera om användaren är admin
+      if (user.role === "admin") {
+        const allReviews = await getAllReviews(); // Hämta alla recensioner
+        setReviews(allReviews);
+      } else {
+        // Hämta recensioner för användaren och skicka med id och token
+        const userReviews = await getReviewsByUserId(user._id, token);
+        setReviews(userReviews); // Spara recensioner i state
+      }
     } catch (error) {
       setError("Kunde inte hämta dina recensioner.");
     }
@@ -77,9 +83,20 @@ const ProfilePage = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="mb-4">Mina sidor</h1>
-      {/* Visa användarens namn om den är inloggad */}
-      <h2 className="mb-4">Hej och välkommen, {user ? user.firstname : ""}!</h2>
-      <h3 className="mb-4">Mina recensioner</h3>
+
+      {/* Ändra rubriker baserat på användarroll */}
+      {user?.role === "admin" ? (
+        <>
+          <h2 className="mb-4">Administrera recensioner</h2>
+          <h3 className="mb-4">Alla recensioner</h3>
+        </>
+      ) : (
+        <>
+          {/* Visa användarens namn om den är inloggad */}
+          <h2 className="mb-4">Hej och välkommen, {user ? user.firstname : ""}!</h2>
+          <h3 className="mb-4">Mina recensioner</h3>
+        </>
+      )}
 
       {/* Visa ev felmeddelande */}
       {error && <p className="text-danger">{error}</p>}
