@@ -135,14 +135,18 @@ const HomePage: React.FC = () => {
       {loading && <p className="my-3 text-center">Laddar...</p>}
       {/* Rendera lista med böcker och skicka med resultat, sökstatus och laddningsstatus */}
       <BookList books={books} hasSearched={hasSearched} loading={loading} />
-      {/* Visa knapp för att ladda fler böcker om det finns fler att hämta */}
-      {hasMore && !loading && books.length > 0 && (
-        <div className="d-flex justify-content-center mt-4">
-          <button onClick={loadMore} className="btn btn-secondary" style={{ width: "200px" }}>
-            Visa fler böcker
-          </button>
-        </div>
-      )}
+      {/* Om det pågår en laddning, visa laddningsmeddelande. Annars visa knapp om fler resultat finns */}
+      <div className="d-flex justify-content-center mt-4">
+        {loading ? (
+          <p className="text-center mt-4">Laddar fler böcker...</p>
+        ) : (
+          hasMore && (
+            <button onClick={loadMore} className="btn btn-secondary mt-4" style={{ width: "200px" }}>
+              Visa fler böcker
+            </button>
+          )
+        )}
+      </div>
 
     </div>
   );
