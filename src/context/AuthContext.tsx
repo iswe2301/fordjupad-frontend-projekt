@@ -34,13 +34,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 const errorData = await res.json(); // Hämta felmeddelandet från svaret
                 throw new Error(errorData.message || "Registreringen misslyckades. Försök igen.");
             }
-
-            // Konvertera svaret till JSON
-            const data: AuthResponse = await res.json();
-
-            // Spara användaren i staten och token i localStorage
-            setUser(data.user);
-            localStorage.setItem("token", data.token);
         }
         catch (error) {
             throw error; // Kasta ett fel om något gick fel
