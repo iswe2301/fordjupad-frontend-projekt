@@ -88,13 +88,16 @@ const LoginPage = () => {
               <label htmlFor="email" className="form-label">
                 E-postadress <span className="text-danger">*</span>
               </label>
-              <input
-                type="email"
-                id="email"
-                className="form-control"
-                value={email} // Koppla värdet till email-state
-                onChange={(e) => setEmail(e.target.value)} // Uppdatera email-state vid ändring
-              />
+              <div className="input-group mb-3">
+                <span className="input-group-text"><i className="bi bi-envelope"></i></span>
+                <input
+                  type="email"
+                  id="email"
+                  className="form-control"
+                  value={email} // Koppla värdet till email-state
+                  onChange={(e) => setEmail(e.target.value)} // Uppdatera email-state vid ändring
+                />
+              </div>
               {emailError && <div className="text-danger small">{emailError}</div>}
             </div>
 
@@ -102,27 +105,30 @@ const LoginPage = () => {
               <label htmlFor="password" className="form-label">
                 Lösenord <span className="text-danger">*</span>
               </label>
-              <input
-                type="password"
-                id="password"
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="input-group mb-3">
+                <span className="input-group-text"><i className="bi bi-lock"></i></span>
+                <input
+                  type="password"
+                  id="password"
+                  className="form-control"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
               {passwordError && <div className="text-danger small">{passwordError}</div>}
             </div>
 
             {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
             <div className="d-grid">
               <button type="submit" className="btn btn-primary mt-2 mb-2" disabled={loading}>
-                {loading ? "Loggar in..." : "Logga in"}
+                {loading ? <><i className="bi bi-arrow-repeat"></i> Loggar in...</> : <><i className="bi bi-box-arrow-in-right"></i> Logga in</>}
               </button>
             </div>
           </form>
 
           {/* Länk till registreringssidan */}
           <p className="text-center mt-3">
-            Ny användare? <Link to="/registrera" className="text-primary">Skapa konto</Link>
+            Ny användare? <Link to="/registrera" className="text-primary mx-1" style={{ textDecoration: "none" }}><i className="bi bi-person-plus"></i> Skapa konto</Link>
           </p>
         </div>
       </div>

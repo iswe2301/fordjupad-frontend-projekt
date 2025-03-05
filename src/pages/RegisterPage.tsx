@@ -97,91 +97,109 @@ const RegisterPage = () => {
         <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "70vh" }}>
             <div className="col-12 col-md-6">
                 <div className="card shadow-sm p-4">
-                    <h1 className="text-center mb-4">Skapa konto</h1>
+                    <h1 className="text-center mb-4">Registrera</h1>
+                    <h2 className="text-center mb-4">Skapa användarkonto</h2>
 
                     {/* Bekräftelsemeddelande när kontot skapats */}
                     {accountCreated ? (
                         <div className="alert alert-success text-center">
-                            <h2 className="mt-4 mb-3">Bekräftelse</h2>
+                            <h3 className="mt-4 mb-3"><i className="bi bi-check-circle"></i> Bekräftelse</h3>
                             <p><strong>Ditt konto har skapats!</strong></p>
                             <p>Du omdirigeras till inloggningssidan...</p>
                         </div>
                     ) : (
                         <>
-                    {/* Felmeddelande */}
-                    {error && <div className="alert alert-danger">{error}</div>}
+                            {/* Felmeddelande */}
+                            {error && <div className="alert alert-danger">{error}</div>}
 
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="firstname" className="form-label">
-                                Förnamn <span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="firstname"
-                                className="form-control"
-                                value={firstname}
-                                onChange={(e) => setFirstname(e.target.value)}
-                            />
-                            {/* Visa felmeddelande om validering inte är korrekt */}
-                            {firstnameError && <div className="text-danger small">{firstnameError}</div>}
-                        </div>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="firstname" className="form-label">
+                                        Förnamn <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-person"></i></span>
+                                        <input
+                                            type="text"
+                                            id="firstname"
+                                            className="form-control"
+                                            value={firstname}
+                                            onChange={(e) => setFirstname(e.target.value)}
+                                        />
+                                    </div>
+                                    {/* Visa felmeddelande om validering inte är korrekt */}
+                                    {firstnameError && <div className="text-danger small">{firstnameError}</div>}
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="lastname" className="form-label">
-                                Efternamn <span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="lastname"
-                                className="form-control"
-                                value={lastname} // Koppla värdet till state
-                                onChange={(e) => setLastname(e.target.value)} // Uppdatera state vid ändring
-                            />
-                            {lastnameError && <div className="text-danger small">{lastnameError}</div>}
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="lastname" className="form-label">
+                                        Efternamn <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-person"></i></span>
+                                        <input
+                                            type="text"
+                                            id="lastname"
+                                            className="form-control"
+                                            value={lastname} // Koppla värdet till state
+                                            onChange={(e) => setLastname(e.target.value)} // Uppdatera state vid ändring
+                                        />
+                                    </div>
+                                    {lastnameError && <div className="text-danger small">{lastnameError}</div>}
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label">
-                                E-postadress <span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                className="form-control"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            {emailError && <div className="text-danger small">{emailError}</div>}
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="email" className="form-label">
+                                        E-postadress <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-envelope"></i></span>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            className="form-control"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                    {emailError && <div className="text-danger small">{emailError}</div>}
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">
-                                Lösenord <span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                className="form-control"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            {passwordError && <div className="text-danger small">{passwordError}</div>}
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="password" className="form-label">
+                                        Lösenord <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-lock"></i></span>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            className="form-control"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                    </div>
+                                    {passwordError && <div className="text-danger small">{passwordError}</div>}
+                                </div>
 
-                        {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
-                        <div className="d-grid">
-                            <button type="submit" className="btn btn-primary mt-2 mb-2" disabled={loading}>
-                                {loading ? "Skapar konto..." : "Skapa konto"}
-                            </button>
-                        </div>
-                    </form>
+                                {/* Knapp för att skicka formuläret, inaktiverad om loading är true */}
+                                <div className="d-grid">
+                                    <button type="submit" className="btn btn-primary mt-2 mb-2" disabled={loading}>
+                                        {loading ? <><i className="bi bi-arrow-repeat"></i> Skapar konto...</> : <><i className="bi bi-person-plus"></i> Skapa konto</>}
+                                    </button>
 
-                    {/* Länk tillbaka till login */}
-                    <p className="text-center mt-3">
-                        Har du redan ett konto? <Link to="/logga-in" className="text-primary">Logga in</Link>
-                    </p>
-                    </>
+                                </div>
+                            </form>
+
+                            {/* Länk tillbaka till login */}
+                            <p className="text-center mt-3">
+                                Har du redan ett konto?
+                                <Link to="/logga-in" className="text-primary mx-1" style={{ textDecoration: "none" }}>
+                                    <i className="bi bi-box-arrow-in-right"></i> Logga in
+                                </Link>
+                            </p>
+
+                        </>
                     )}
                 </div>
             </div>
