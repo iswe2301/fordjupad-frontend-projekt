@@ -125,9 +125,9 @@ const ProfilePage = () => {
       )}
 
       {/* Visa ev felmeddelande */}
-      {error && <p className="text-danger">{error}</p>}
+      {error && <p className="text-danger"><i className="bi bi-exclamation-triangle"></i> {error}</p>}
       {/* Visa laddningsmeddelande */}
-      {loading && <p>Laddar recensioner...</p>}
+      {loading && <p><i className="bi bi-arrow-repeat"></i> Laddar recensioner...</p>}
 
       <div className="mt-4">
         {/* Kontrollera om användaren har recensioner */}
