@@ -37,9 +37,9 @@ const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
         <div className="mt-4">
             <h3 className="mb-4">Recensioner</h3>
             {/* Laddningsstatus */}
-            {loading && <p>Laddar recensioner...</p>}
+            {loading && <p><i className="bi bi-arrow-repeat"></i> Laddar recensioner...</p>}
             {/* Felmeddelande */}
-            {error && <p className="text-danger">{error}</p>}
+            {error && <p className="text-danger"><i className="bi bi-exclamation-triangle"></i> {error}</p>}
             {/* Om inga recensioner finns */}
             {!loading && !error && reviews.length === 0 && <p>Inga recensioner ännu.</p>}
             {/* Lista med recensioner */}
@@ -48,7 +48,13 @@ const Reviews: React.FC<ReviewsProps> = ({ bookId }) => {
                     {/* Loopa igenom recensioner och rendera dem */}
                     {reviews.map((review) => (
                         <div key={review._id} className="border p-3 mb-2 rounded">
-                            <p>{review.userId.firstname} gav {"⭐".repeat(review.rating)}</p>
+                            <p>
+                                {review.userId.firstname} gav {" "}
+                                {/* Skapa en array med stjärnor baserat på betyg */}
+                                {[...Array(review.rating)].map((_, i) => (
+                                    <i key={i} className="bi bi-star-fill text-warning"></i>
+                                ))}
+                            </p>
                             <p>{review.reviewText}</p>
                             <small className="text-muted">
                                 {/* Konvertera datum */}
