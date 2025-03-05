@@ -1,6 +1,6 @@
 import { Book } from "../types/book.types";
 import BookLike from "./BookLike";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Props för komponenten
 interface MiniBookItemProps {
@@ -10,29 +10,33 @@ interface MiniBookItemProps {
 
 // Komponent för att visa en bok i miniformat
 const MiniBookItem: React.FC<MiniBookItemProps> = ({ book, onUnlike }) => {
-
-    // Hook för att navigera till en annan sida
-    const navigate = useNavigate();
-
     return (
-        <div className="col-12 col-sm-6 col-md-4 p-2">
-            <div className="card h-100">
-                {/* Visa thumbnail eller placeholder-bild */}
-                <img
-                    src={book.volumeInfo.imageLinks?.thumbnail || "/placeholder.png"}
-                    className="card-img-top"
-                    alt={book.volumeInfo.title}
-                    style={{ objectFit: "cover", height: "200px" }}
-                />
+        <div className="col-12 col-sm-6 col-md-4 col-lg-3 p-2">
+            <div className="card book-item h-100 shadow-sm border rounded overflow-hidden d-flex flex-column">
+                {/* Bild med overlay */}
+                <div className="book-image-wrapper">
+                    <img
+                        src={book.volumeInfo.imageLinks?.thumbnail || "/placeholder.png"}
+                        alt={book.volumeInfo.title}
+                        className="card-img-top book-img"
+                        style={{ objectFit: "cover", height: "200px" }}
+                    />
+                    {/* Overlay med länk till boksidan */}
+                    <Link to={`/bok/${book.id}`} className="book-overlay">
+                        <div className="overlay-text"><i className="bi bi-eye"></i> Läs mer</div>
+                    </Link>
+                </div>
+
+                {/* Kortinnehåll */}
                 <div className="card-body text-center d-flex flex-column">
-                    <h4 className="card-title mb-4">{book.volumeInfo.title}</h4>
+                    <h4 className="card-title">{book.volumeInfo.title}</h4>
+                    <p className="card-text text-muted small flex-grow-1">
+                        {book.volumeInfo.authors?.join(", ") || "Okänd författare"}
+                    </p>
+
+                    {/* Rendera BookLike för att gilla/avgilla boken */}
                     <div className="mt-auto">
-                        {/* Rendera komponenten BookLike för att gilla boken och skicka med props */}
                         <BookLike bookId={book.id} onUnlike={() => onUnlike(book.id)} />
-                        {/* Knapp för med länk till detaljsidan för boken */}
-                        <button className="btn btn-sm btn-secondary mt-2 py-1 px-4" onClick={() => navigate(`/bok/${book.id}`)}>
-                            <i className="bi bi-book-half"></i> Läs mer
-                        </button>
                     </div>
                 </div>
             </div>
