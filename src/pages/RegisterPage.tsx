@@ -10,6 +10,7 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [accountCreated, setAccountCreated] = useState(false);
 
     // Individuella felmeddelanden
     const [firstnameError, setFirstnameError] = useState('');
@@ -69,7 +70,17 @@ const RegisterPage = () => {
 
         try {
             await register({ firstname, lastname, email, password });
-            navigate("/mina-sidor"); // Skicka användaren till sin profil
+            // Sätt state för att visa meddelande om att kontot skapats
+            setAccountCreated(true);
+            // Rensa formuläret
+            setFirstname('');
+            setLastname('');
+            setEmail('');
+            setPassword('');
+            // Navigera till login-sidan efter 3 sekunder
+            setTimeout(() => {
+                navigate('/logga-in');
+            }, 3000);
         } catch (error: any) {
             // Kontrollera om felmeddelandet är "Användaren existerar redan"
             if (error.message === "Användaren existerar redan") {
@@ -88,6 +99,15 @@ const RegisterPage = () => {
                 <div className="card shadow-sm p-4">
                     <h1 className="text-center mb-4">Skapa konto</h1>
 
+                    {/* Bekräftelsemeddelande när kontot skapats */}
+                    {accountCreated ? (
+                        <div className="alert alert-success text-center">
+                            <h2 className="mt-4 mb-3">Bekräftelse</h2>
+                            <p><strong>Ditt konto har skapats!</strong></p>
+                            <p>Du omdirigeras till inloggningssidan...</p>
+                        </div>
+                    ) : (
+                        <>
                     {/* Felmeddelande */}
                     {error && <div className="alert alert-danger">{error}</div>}
 
@@ -161,6 +181,8 @@ const RegisterPage = () => {
                     <p className="text-center mt-3">
                         Har du redan ett konto? <Link to="/logga-in" className="text-primary">Logga in</Link>
                     </p>
+                    </>
+                    )}
                 </div>
             </div>
         </div>
