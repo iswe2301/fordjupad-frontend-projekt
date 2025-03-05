@@ -25,6 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         // Formulär för att söka efter böcker, anropar handleSubmit vid inskickning
         <form onSubmit={handleSubmit} className="container">
             <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-book"></i></span>
                 <input
                     type="text"
                     value={query} // Koppla input-fältet till query-state
@@ -32,8 +33,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                     placeholder="Sök efter en bok..."
                     className="form-control"
                 />
-                <button type="submit" className="btn btn-primary">
-                    Sök
+                <button type="submit" className="btn btn-primary" aria-label="Sök">
+                    <i className="bi bi-search"></i>
                 </button>
             </div>
         </form>
