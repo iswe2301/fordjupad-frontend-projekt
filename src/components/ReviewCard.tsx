@@ -15,6 +15,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onUpdate, onDelete }) =
     const [isEditing, setIsEditing] = useState(false);
     const [newText, setNewText] = useState(review.reviewText);
     const [newRating, setNewRating] = useState(review.rating);
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
     // Funktion för att spara uppdaterad recension
     const handleSave = () => {
@@ -65,21 +66,39 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, onUpdate, onDelete }) =
             <div className="mt-2" style={{ display: "flex", gap: "10px" }}>
                 {/* Kontrollera om redigering är aktiv */}
                 {isEditing ? (
-                    // Visa spara-knapp
-                    < button className="btn btn-primary" onClick={handleSave} style={{ width: "100px" }}>
-                        Spara
-                    </button>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                        {/* Knappar för att spara eller avbryta redigering */}
+                        <button className="btn btn-primary" onClick={handleSave} style={{ width: "100px" }}>
+                            Spara
+                        </button>
+                        <button className="btn btn-secondary" onClick={() => setIsEditing(false)} style={{ width: "100px" }}>
+                            Avbryt
+                        </button>
+                    </div>
+                ) : confirmDelete ? (
+                    // Kontrollera om radering är aktiv och visa bekräftelsemeddelande + åtgärdsknappar
+                    <div className="flex flex-col items-center">
+                        <p className="text-danger"><strong>Är du säker på att du vill radera denna recension?</strong></p>
+                        <div style={{ display: "flex", gap: "10px" }}>
+                            <button className="btn btn-danger" onClick={() => onDelete(review._id)} style={{ width: "100px" }}>
+                                Radera
+                            </button>
+                            <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)} style={{ width: "100px" }}>
+                                Avbryt
+                            </button>
+                        </div>
+                    </div>
                 ) : (
-                    // Visa annars redigera-knapp
-                    <button className="btn btn-warning" onClick={() => setIsEditing(true)} style={{ width: "100px" }}>
-                        Redigera
-                    </button>
+                    // Visa knappar annars standard knappar för redigering och radering
+                    <div style={{ display: "flex", gap: "10px" }}>
+                        <button className="btn btn-warning" onClick={() => setIsEditing(true)} style={{ width: "100px" }}>
+                            Redigera
+                        </button>
+                        <button className="btn btn-danger" onClick={() => setConfirmDelete(true)} style={{ width: "100px" }}>
+                            Radera
+                        </button>
+                    </div>
                 )}
-
-                {/* Knapp för att ta bort recension */}
-                <button className="btn btn-danger" onClick={() => onDelete(review._id)} style={{ width: "100px" }}>
-                    Ta bort
-                </button>
             </div>
         </div >
     );
