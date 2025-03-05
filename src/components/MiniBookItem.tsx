@@ -17,7 +17,7 @@ const MiniBookItem: React.FC<MiniBookItemProps> = ({ book, onUnlike }) => {
     return (
         <div className="col-12 col-sm-6 col-md-4 p-2">
             <div className="card h-100">
-                {/* Visa thumbnail eller placeholder-bild */ }
+                {/* Visa thumbnail eller placeholder-bild */}
                 <img
                     src={book.volumeInfo.imageLinks?.thumbnail || "/placeholder.png"}
                     className="card-img-top"
@@ -30,11 +30,8 @@ const MiniBookItem: React.FC<MiniBookItemProps> = ({ book, onUnlike }) => {
                         {/* Rendera komponenten BookLike för att gilla boken och skicka med props */}
                         <BookLike bookId={book.id} onUnlike={() => onUnlike(book.id)} />
                         {/* Knapp för med länk till detaljsidan för boken */}
-                        <button
-                            className="btn btn-sm btn-secondary mt-2 w-100"
-                            onClick={() => navigate(`/bok/${book.id}`)}
-                        >
-                            Läs mer
+                        <button className="btn btn-sm btn-secondary mt-2 py-1 px-4" onClick={() => navigate(`/bok/${book.id}`)}>
+                            <i className="bi bi-book-half"></i> Läs mer
                         </button>
                     </div>
                 </div>
