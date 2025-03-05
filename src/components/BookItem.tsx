@@ -21,7 +21,7 @@ const BookItem: React.FC<BookItemProps> = ({ book }) => {
                 />
                 {/* Overlay med länk till boksidan */}
                 <Link to={`/bok/${book.id}`} className="book-overlay">
-                    <div className="overlay-text">Läs mer</div>
+                    <div className="overlay-text"><i className="bi bi-eye"></i> Läs mer</div>
                 </Link>
             </div>
             {/* Kortinnehåll */}
