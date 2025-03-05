@@ -3,6 +3,10 @@ import { useAuth } from "../context/AuthContext";
 import { Review } from "../types/review.types";
 import { getReviewsByUserId, updateReview, deleteReview, getAllReviews } from "../services/reviewApi";
 import ReviewCard from "../components/ReviewCard";
+import { getUserLikedBooks } from "../services/bookLikeApi";
+import { fetchBook } from "../services/googleBooksApi";
+import { Book } from "../types/book.types";
+import MiniBookItem from "../components/MiniBookItem";
 
 // Profilsidan för inloggad användare
 const ProfilePage = () => {
@@ -13,15 +17,18 @@ const ProfilePage = () => {
   // States
   const [reviews, setReviews] = useState<Review[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [likedBooks, setLikedBooks] = useState<Book[]>([]);
 
-  // Hämta användarens recensioner vid rendering av komponenten
+  // Hämta användarens recensioner och gillade böcker vid rendering av komponenten
   useEffect(() => {
     // Kontrollera att användare och token finns
     if (!loading && user && token) {
       fetchUserReviews();
+      fetchLikedBooks();
     }
   }, [user, token, loading]); // Uppdatera när användare eller token ändras eller laddning är klar
 
+  // Funktion för att hämta användarens recensioner
   const fetchUserReviews = async () => {
     setError(null);
     try {
@@ -80,6 +87,25 @@ const ProfilePage = () => {
     }
   };
 
+  // Funktion för att hämta användarens gillade böcker
+  const fetchLikedBooks = async () => {
+    setError(null); // Nollställ ev tidigare felmeddelande
+    try {
+      // Kontrollera att användare och token finns
+      if (!token || !user) {
+        setError("Du är inte inloggad. Logga in och försök igen.");
+        return;
+      }
+      // Hämta alla gillade böcker för användaren
+      const likedBookIds = await getUserLikedBooks(token);
+      // Hämta information om varje bok och spara i state
+      const books = await Promise.all(likedBookIds.map((bookId: string) => fetchBook(bookId)));
+      setLikedBooks(books);
+    } catch (error) {
+      setError("Kunde inte hämta dina gillade böcker.");
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="mb-4">Mina sidor</h1>
@@ -120,6 +146,29 @@ const ProfilePage = () => {
           <p>Du har inga recensioner ännu.</p>
         )}
       </div>
+      {/* Visa gillade böcker om användaren inte är admin */}
+      {user?.role !== "admin" && (
+        <>
+          <h3 className="mt-4 mb-4">Gillade Böcker</h3>
+          <div className="row g-3">
+            {/* Kontrollera om användaren har gillade böcker */}
+            {likedBooks.length > 0 ? (
+              // Loopa igenom gillade böcker och rendera dem
+              likedBooks.map((book) => (
+                // Rendera komponenten MiniBookItem för varje bok och skicka med props
+                <MiniBookItem
+                  key={book.id}
+                  book={book}
+                  onUnlike={(bookId) => setLikedBooks(likedBooks.filter((b) => b.id !== bookId))}
+                />
+              ))
+            ) : (
+              // Visa meddelande om användaren inte har gillade böcker
+              <p>Du har inga gillade böcker ännu.</p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
