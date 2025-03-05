@@ -29,7 +29,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ onCategoryChange, selectedCategor
         { value: "psychology", label: "Psykologi" },
         { value: "religion", label: "Religion" },
         { value: "romantik", label: "Romantik" },
-        { value: "society", label: "Samhälle" },
         { value: "politics", label: "Politik" },
         { value: "other", label: "Övrigt" }
     ].sort((a, b) => a.label.localeCompare(b.label)); // Sortera kategorier i bokstavsordning
