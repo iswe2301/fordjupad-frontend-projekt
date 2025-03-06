@@ -20,6 +20,12 @@ export interface Book {
   };
 }
 
+// Interface för att representera svar från Google Books API
+export interface BooksResponse {
+  books: Book[];
+  totalItems: number;
+}
+
 // Interface för en bokgillning
 export interface BookLike {
   userId: string; // Användar-ID
