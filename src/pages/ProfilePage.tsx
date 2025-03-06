@@ -159,7 +159,7 @@ const ProfilePage = () => {
                 <MiniBookItem
                   key={book.id}
                   book={book}
-                  onUnlike={(bookId) => setLikedBooks(likedBooks.filter((b) => b.id !== bookId))}
+                  onUnlike={(bookId) => { setTimeout(() => { setLikedBooks(likedBooks.filter((b) => b.id !== bookId));}, 200)}} // Uppdatera state efter 200 ms
                 />
               ))
             ) : (
