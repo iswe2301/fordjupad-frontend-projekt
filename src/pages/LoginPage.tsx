@@ -75,6 +75,7 @@ const LoginPage = () => {
       <div className="col-12 col-md-6">
         <div className="card shadow-sm p-4">
           <h1 className="text-center mb-4">Logga in</h1>
+          <h2 className="text-center mb-4">Mina sidor</h2>
 
           {/* Felmeddelande */}
           {error && (
