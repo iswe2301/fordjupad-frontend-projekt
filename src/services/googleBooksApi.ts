@@ -1,23 +1,23 @@
-import { Book } from "../types/book.types"; // Importera interface för böcker
+import { Book, BooksResponse } from "../types/book.types"; // Importera interface för böcker
 
 // Funktion för att hämta böcker från Google Books API
-export const fetchBooks = async (query: string, page: number = 0, category?: string): Promise<Book[]> => {
+export const fetchBooks = async (query: string, page: number = 0, category?: string): Promise<BooksResponse> => {
 
     const maxResults = 12; // Hämta 12 böcker per sidladdning
     const startIndex = page * maxResults; // Sätt startindex för sidan baserat på sidnummer och maxresultat
 
     // Om både query och kategori saknas, returnera en tom lista
     if (!query.trim() && !category) {
-        return [];
+        return {books: [], totalItems: 0};
     }
 
     try {
-
-        // Skapa en söksträng baserat på query och kategori
+        // Skapa söksträng baserat på query och kategori
         let searchQuery = query.trim() ? query : "";
 
+        // Om kategori finns, lägg till den i söksträngen
         if (category) {
-            searchQuery += `+subject:${encodeURIComponent(category)}`;
+            searchQuery += `${encodeURIComponent(category)}`;
         }
 
         // URL för att anropa Google Books API
@@ -32,15 +32,18 @@ export const fetchBooks = async (query: string, page: number = 0, category?: str
         }
 
         // Konvertera svaret till JSON-format
-        const data: { items?: Book[] } = await response.json();
+        const data: { items?: Book[], totalItems: number } = await response.json();
 
-        // Returnera böcker från svaret som en array, eller en tom array om inga böcker hittades
-        return Array.isArray(data.items) ? data.items : [];
+        // Returnera böcker från svaret, eller en tom array om inga böcker hittades + totalt antal böcker
+        return {
+            books: Array.isArray(data.items) ? data.items : [],
+            totalItems: data.totalItems ?? 0
+        };
 
     } catch (error) {
         // Logga felmeddelande och returnera en tom array om något gick fel
         console.error("Fel vid hämtning av böcker:", error);
-        return [];
+        return {books: [], totalItems: 0};
     }
 };
 
