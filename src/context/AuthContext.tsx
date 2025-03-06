@@ -4,6 +4,8 @@ import { User, RegisterCredentials, LoginCredentials, AuthResponse, AuthContextT
 // Skapa en kontext för autentisering
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const URL = "https://fordjupad-frontend-projekt-api.onrender.com/api/auth"; // URL till API
+
 // Interface för autentiseringskontextens provider
 export interface AuthProviderProps {
     children: ReactNode
@@ -21,7 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(true); // Sätt loading till true
         try {
             // Gör ett anrop till API:et för att registrera användaren
-            const res = await fetch("http://localhost:5000/api/auth/register", {
+            const res = await fetch(`${URL}/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -47,7 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(true); // Sätt loading till true
         try {
             // Gör ett anrop till API:et för att logga in
-            const res = await fetch("http://localhost:5000/api/auth/login", {
+            const res = await fetch(`${URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -96,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         try {
             // Gör ett anrop till API:et för att validera token
-            const res = await fetch("http://localhost:5000/api/auth/checkToken", {
+            const res = await fetch(`${URL}/checkToken`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
