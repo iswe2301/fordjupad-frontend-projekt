@@ -30,6 +30,10 @@ const router = createBrowserRouter([
                 element: <RegisterPage />
             },
             {
+                path: "*",
+                element: <h1 className="text-center">404 - Sidan kunde inte hittas</h1>
+            },
+            {
                 path: "/mina-sidor",
                 element: (
                     <ProtectedRoute>
