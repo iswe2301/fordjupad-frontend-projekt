@@ -1,6 +1,6 @@
 import { Review } from "../types/review.types"; // Importera interface för recensioner
 
-const URL = "http://localhost:5000/api/reviews"; // API URL
+const URL = "https://fordjupad-frontend-projekt-api.onrender.com/api/reviews"; // API URL
 
 // Hämta alla recensioner
 export const getAllReviews = async (): Promise<Review[]> => {

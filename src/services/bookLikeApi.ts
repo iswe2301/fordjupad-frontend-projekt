@@ -1,6 +1,6 @@
 import { BookLike } from "../types/book.types"; // Importera interface för bokgillningar
 
-const URL = "http://localhost:5000/api/book-likes"; // URL till API
+const URL = "https://fordjupad-frontend-projekt-api.onrender.com/api/book-likes"; // URL till API
 
 // Funktion för att gilla en bok
 export const likeBook = async (bookId: string, token: string) => {
