@@ -37,10 +37,10 @@ const HomePage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const results = await fetchBooks(searchQuery, 0, category); // Hämta böcker
-      setBooks(results);
+      const { books, totalItems } = await fetchBooks(searchQuery, 0, category); // Hämta böcker och totalt antal
+      setBooks(books);
       setPage(pageNumber);
-      setHasMore(results.length === 12);
+      setHasMore((pageNumber + 1) * 12 < totalItems); // Kolla om fler resultat finns
       setHasSearched(true);
     } catch (error) {
       setError("Kunde inte hämta böcker. Försök igen.");
@@ -58,7 +58,6 @@ const HomePage: React.FC = () => {
       setSearchParams({ query: newQuery, category });
     }
   };
-  
 
   // Funktion för att hantera ändring av kategori
   const handleCategoryChange = (newCategory: string) => {
@@ -73,16 +72,16 @@ const HomePage: React.FC = () => {
     // Använd query, annars kategori. Om inget finns, använd default "fiction".
     const searchQuery = query.trim() || category || "fiction";
     try {
-      const results = await fetchBooks(searchQuery, nextPage, category);
-      if (results.length > 0) {
+      const { books, totalItems } = await fetchBooks(searchQuery, nextPage, category);
+      if (books.length > 0) {
         // Lägg till nya böcker utan dubbletter
         setBooks((prevBooks) => {
           const uniqueBooks = new Map(prevBooks.map(book => [book.id, book]));
-          results.forEach(book => uniqueBooks.set(book.id, book));
+          books.forEach(book => uniqueBooks.set(book.id, book));
           return Array.from(uniqueBooks.values());
         });
         setPage(nextPage);
-        setHasMore(results.length === 12);
+        setHasMore((nextPage + 1) * 12 < totalItems);
       } else {
         setHasMore(false);
       }
