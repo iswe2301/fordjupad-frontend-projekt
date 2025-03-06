@@ -1,10 +1,20 @@
-import { NavLink } from "react-router-dom" // Importera NavLink
+import { NavLink, useLocation } from "react-router-dom"
+import { useEffect } from "react"
 import { useAuth } from "../context/AuthContext"
 
 // Header-komponent
 const Header = () => {
 
   const { user, logout } = useAuth(); // Importera user och logout från AuthContext
+  const location = useLocation(); // Hämta aktuell URL
+
+  // Körs vid rendering
+  useEffect(() => {
+    const mobileMenu = document.querySelector(".navbar-collapse"); // Hämta mobilmenyn
+    if (mobileMenu) {
+      (mobileMenu as HTMLElement).classList.remove("show"); // Dölj mobilmenyn
+      }
+  }, [location]); // Uppdatera vid sidbyte
 
   return (
     <header>
